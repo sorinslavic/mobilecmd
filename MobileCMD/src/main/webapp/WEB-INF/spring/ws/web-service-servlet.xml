@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <description>
+            This bean definition contains the XSD schema.
+        </description>
+        <property name="xsd" value="/WEB-INF/classes/AndroidCMDObjects.xsd"/>
+    </bean>
+	
+	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="classesToBeBound">
+			<list>
+				<value>com.sorin.mobilecmd.xml.schema.LoginRequest</value>
+				<value>com.sorin.mobilecmd.xml.schema.LoginResponse</value>
+				<value>com.sorin.mobilecmd.xml.schema.GetClientsRequest</value>
+				<value>com.sorin.mobilecmd.xml.schema.GetClientsResponse</value>
+				<value>com.sorin.mobilecmd.xml.schema.GetClientFilesRequest</value>
+				<value>com.sorin.mobilecmd.xml.schema.GetClientFilesResponse</value>
+				<value>com.sorin.mobilecmd.xml.schema.RunCommand</value>
+				<value>com.sorin.mobilecmd.xml.schema.RunResponse</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- WSDL Definition -->
+    <bean id="AndroidCMDObjects" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+        <description>
+            Dynamically builds a WSDL from the AndroidCMDObjects.xsd. 
+        </description>
+        <property name="schema" ref="schema"/>
+		<property name="portTypeName" value="AndroidCMDObjects"/>
+		<property name="targetNamespace" value="http://www.sorin.com/cmd"/>
+		<property name="locationUri" value="http://localhost:9080/mobilecmd"/>
+    </bean>    
+    				
+    <!-- Interceptors -->
+    <!-- >bean id="validatingInterceptor"
+          class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+        <description>
+            This interceptor validates both incoming and outgoing message contents according to the '.xsd' XML Schema file.
+        </description>
+        <property name="xsdSchema" ref="schema"/>
+        <property name="validateRequest" value="true"/>
+        <property name="validateResponse" value="true"/>
+    </bean-->
+		
+	<bean id="loggingInterceptor" class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor">
+        <description>
+            This interceptor logs the message payload.
+        </description>
+        <property name="logRequest" value="true"/>
+        <property name="logResponse" value="true"/>
+    </bean>
+		
+	<!-- Endpoint mappings -->
+	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">       
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.sorin.com/cmd}LoginRequest">loginEndpoint</prop>
+                <prop key="{http://www.sorin.com/cmd}GetClientsRequest">getClientsEndpoint</prop>               
+                <prop key="{http://www.sorin.com/cmd}GetClientFilesRequest">getClientFilesEndpoint</prop>
+                <prop key="{http://www.sorin.com/cmd}RunCommand">runCommandEndpoint</prop>       
+                <!-- 
+                <prop key="{http://www.sorin.com/cmd}GetFileRequest">loginEnpoint</prop>                
+                -->
+            </props>
+        </property>
+        <property name="interceptors">
+            <list>            	
+                <!-- ref local="validatingInterceptor"/-->
+                <ref local="loggingInterceptor"/>                
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="service" class="com.sorin.mobilecmd.services.WebServiceImpl">
+    	<constructor-arg ref="jdbcTemplate"/> 
+    </bean>
+    
+    <!-- Endpoint definitions -->
+	<bean id="loginEndpoint" class="com.sorin.mobilecmd.ws.LoginEndpoint">
+		<constructor-arg ref="marshaller" />
+		<constructor-arg ref="service" />
+	</bean>
+	
+	<bean id="getClientsEndpoint" class="com.sorin.mobilecmd.ws.GetClientsEndpoint">
+		<constructor-arg ref="marshaller" />
+		<constructor-arg ref="service" />
+	</bean>
+	
+	<bean id="getClientFilesEndpoint" class="com.sorin.mobilecmd.ws.GetClientFilesEndpoint">
+		<constructor-arg ref="marshaller" />
+		<constructor-arg ref="service" />
+	</bean>
+	
+	<bean id="runCommandEndpoint" class="com.sorin.mobilecmd.ws.RunCommandEndpoint">
+		<constructor-arg ref="marshaller" />
+		<constructor-arg ref="service" />
+	</bean>
+					
+</beans>

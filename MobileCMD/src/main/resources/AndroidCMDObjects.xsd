@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.sorin.com/cmd"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.sorin.com/cmd">
+	
+	<element name="LoginRequest">
+		<complexType>
+			<all>
+				<element name="Username" type="string" maxOccurs="1" minOccurs="1"></element>
+				<element name="Password" type="string" maxOccurs="1" minOccurs="1"></element>
+			</all>
+		</complexType>
+	</element>
+			
+	<element name="LoginResponse">
+		<complexType>
+			<all>
+				<element name="UserID"		type="int" maxOccurs="1" minOccurs="1"></element>
+				<element name="Username"	type="string" maxOccurs="1" minOccurs="1"></element>
+				<element name="Password"	type="string" maxOccurs="1" minOccurs="1"></element>
+				<element name="FirstName"	type="string" maxOccurs="1" minOccurs="1"></element>
+				<element name="LastName"	type="string" maxOccurs="1" minOccurs="1"></element>
+				
+			</all>
+		</complexType>
+	</element>
+	
+	<element name="GetClientsRequest">
+		<complexType>
+			<all>
+				<element name="UserID"		type="int" maxOccurs="1" minOccurs="1"></element>
+			</all>
+		</complexType>
+	</element>
+	
+	<complexType name="Client">
+		<all>
+			<element name="ClientID"		type="int" maxOccurs="1" minOccurs="1"></element>
+			<element name="ComputerName"	type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="IpAddress"		type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="AllowCommands"	type="boolean" maxOccurs="1" minOccurs="1"></element>
+		</all>
+	</complexType>
+	
+	<element name="GetClientsResponse">
+		<complexType>
+			<sequence>
+				<element name="Clients" 		type="tns:Client" maxOccurs="unbounded" minOccurs="0"></element>
+			</sequence>
+		</complexType>
+	</element>
+	
+	<element name="GetClientFilesRequest">
+		<complexType>
+			<all>
+				<element name="ClientID"		type="int" maxOccurs="1" minOccurs="1"></element>
+			</all>
+		</complexType>
+	</element>
+	
+	<complexType name="ClientFile">
+		<all>
+			<element name="ClientFileID"	type="int" maxOccurs="1" minOccurs="1"></element>
+			<element name="FilePath"		type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="Folder"			type="boolean" maxOccurs="1" minOccurs="1"></element>
+			<element name="Recursive"		type="boolean" maxOccurs="1" minOccurs="1"></element>
+		</all>
+	</complexType>
+	
+	<element name="GetClientFilesResponse">
+		<complexType>
+			<sequence>
+				<element name="Files" 		type="tns:ClientFile" maxOccurs="unbounded" minOccurs="0"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="RunCommand">
+		<complexType>
+    		<all>
+    			<element name="Command" 	type="string" minOccurs="1" maxOccurs="1"></element>
+    			<element name="IpAddress"	type="string" minOccurs="1" maxOccurs="1"></element>
+    		</all>
+    	</complexType>
+	</element>
+	
+	<element name="RunResponse">
+		<complexType>
+			<all>
+				<element name="Success"		type="boolean" minOccurs="1" maxOccurs="1"></element>
+				<element name="Message"		type="string" minOccurs="1" maxOccurs="1"></element>
+			</all>
+		</complexType>
+	</element>
+</schema>

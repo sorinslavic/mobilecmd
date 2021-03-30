@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, AndroidCMDActivity!</string>
+    <string name="app_name">AndroidCMD</string>
+    <string name="title">AndroidCMD</string>
+    <string name="username">User name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="loading">Loading. Please wait &#8230;</string>
+    <string name="running">Running. Please wait &#8230;</string>
+    <string name="error">Error</string>    
+    <string name="error_message">Error message</string>
+    <string name="please.select.a.client">Please select a Desktop Client</string>
+    <string name="cmd">Enter the command script:</string>
+    <string name="run.cmd">Run</string>
+    <string name="cmd.hint">Enter the System CMD you would like to run</string> 
+
+</resources>
